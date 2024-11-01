@@ -30,20 +30,14 @@ min_epsilon = 0.05
 decay_rate = 0.0005
 
 def initialize_q_table(state_space, action_space):
-    Qtable = np.zeros((state_space, action_space))
+    Qtable = None
     return Qtable
     
 def epsilon_greedy_policy(Qtable, state, epsilon):
-    random_int = random.uniform(0,1)
-    if random_int > epsilon:
-        action = np.argmax(Qtable[state]) - 2
-    else:
-        action = random.randint(-2, 2)
-    return action
+    return
     
 def greedy_policy(Qtable, state):
-    action = np.argmax(Qtable[state]) - 2
-    return action
+    return
 
 class GameController(object):
     def __init__(self):
@@ -59,7 +53,7 @@ class GameController(object):
         self.pause = Pause(False)
         
         self.Qtable = initialize_q_table(SCREENWIDTH*SCREENHEIGHT, 5)
-        self.train(n_training_episodes, min_epsilon, max_epsilon, decay_rate, max_steps, self.Qtable)
+#        self.train(n_training_episodes, min_epsilon, max_epsilon, decay_rate, max_steps, self.Qtable)
 
     def setBackground(self):
         self.background = pygame.surface.Surface(SCREENSIZE).convert()
@@ -165,27 +159,15 @@ class GameController(object):
         
     def train(self, n_training_episodes, min_epsilon, max_epsilon, decay_rate, max_steps, Qtable):
         for episode in range(n_training_episodes):
-
-            epsilon = min_epsilon + (max_epsilon - min_epsilon)*np.exp(-decay_rate*episode)
-            # Reset the environment
             state = self.restartGame()
             step = 0
             done = False
 
             # repeat
             for step in range(max_steps):
-                action = epsilon_greedy_policy(Qtable, state, epsilon)
-
-                new_state, reward, done = self.step(action)
-
-                Qtable[state][action+2] = Qtable[state][action+2] + learning_rate * (reward + gamma * np.max(Qtable[new_state]) - Qtable[state][action+2])
-
-                # If done, finish the episode
+                
                 if done:
                     break
-
-                # Our state is the new state
-                state = new_state
         return Qtable
         
     def restartGame(self):

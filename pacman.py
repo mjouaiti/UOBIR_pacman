@@ -42,7 +42,8 @@ class Pacman(Entity):
         if action != -1:
             direction = action
         else:
-            direction = random.randint(-2, 2)#self.getValidKey()    
+            direction = self.getValidKey()
+#            direction = random.randint(-2, 2)#self.getValidKey()
 
         if self.overshotTarget():
             self.node = self.target
